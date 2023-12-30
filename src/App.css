@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+.centered-alt-text {
+  object-fit: cover; /* Ensure the image covers the entire space */
+  object-position: center; /* Center the alt text vertically and horizontally */
+}

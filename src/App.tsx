@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
@@ -68,7 +69,7 @@ const App: React.FC = () => {
         <Toolbar>
           <HouseIcon sx={{ mr: 2 }} />
           <Typography variant="h6" color="inherit" noWrap>
-            Open House Ai Project
+            Open House AI Project
           </Typography>
         </Toolbar>
       </AppBar>

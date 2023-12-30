@@ -12,3 +12,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.centered-alt-text {
+  object-fit: cover; /* Ensure the image covers the entire space */
+  object-position: center; /* Center the alt text vertically and horizontally */
+}
