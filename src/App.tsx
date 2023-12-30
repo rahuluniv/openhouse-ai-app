@@ -90,24 +90,23 @@ const App: React.FC = () => {
         </Toolbar>
       </AppBar>
       <main>
-        <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2, marginRight: 3 }}>
           <FormControl variant="outlined" sx={{ minWidth: 200 }}>
             <InputLabel id="group-select-label">Group</InputLabel>
             <Select
-                labelId="group-select-label"
-                id="group-select"
-                value={selectedGroup}
-                onChange={handleGroupChange}
-                label="Group"
-              >
-                <MenuItem value="">
-                  <em>All</em>
-                </MenuItem>
-                {groups.map(group => (
-                  <MenuItem key={group} value={group}>{group}</MenuItem>
-                ))}
-              </Select>
-
+              labelId="group-select-label"
+              id="group-select"
+              value={selectedGroup}
+              onChange={handleGroupChange}
+              label="Group"
+            >
+              <MenuItem value="">
+                <em>All</em>
+              </MenuItem>
+              {groups.map(group => (
+                <MenuItem key={group} value={group}>{group}</MenuItem>
+              ))}
+            </Select>
           </FormControl>
         </Box>
         {communities.length > 0 && homes.length > 0 ? (

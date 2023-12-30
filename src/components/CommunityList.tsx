@@ -55,7 +55,7 @@ const CommunityList: React.FC<MainDisplayProps> = ({ communities, homes, selecte
   };
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    e.currentTarget.src = 'https://via.placeholder.com/150';
+    e.currentTarget.src = '/imgcomingsoon.jpg';
   };
 
   const handlePriceChange = (event: Event, newValue: number | number[]) => {
@@ -146,7 +146,7 @@ const CommunityList: React.FC<MainDisplayProps> = ({ communities, homes, selecte
               <CardMedia
                 component="img"
                 onError={handleImageError}
-                src={community.imgUrl || 'https://via.placeholder.com/150'}
+                src={community.imgUrl || '/imgcomingsoon.jpg'}
                 alt={community.name}
                 height="140"
               />
