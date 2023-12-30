@@ -20,7 +20,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="https://www.linkedin.com/in/rahul-bains/">
         My LinkedIn
       </Link>{' '}
       {new Date().getFullYear()}
@@ -125,7 +125,7 @@ const App: React.FC = () => {
           color="text.secondary"
           component="p"
         >
-          Please Hire Me
+          Please hire me, if you like my Skillset
         </Typography>
         <Copyright />
       </Box>
