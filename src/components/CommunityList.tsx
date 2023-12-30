@@ -13,37 +13,40 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import TextField from '@mui/material/TextField';
+import Slider from '@mui/material/Slider';
 import MenuItem from '@mui/material/MenuItem';
 import CardActionArea from '@mui/material/CardActionArea';
+import TextField from '@mui/material/TextField';
 
 interface MainDisplayProps {
   communities: Community[];
   homes: Home[];
+  selectedGroup: string;
 }
 
-const CommunityList: React.FC<MainDisplayProps> = ({ communities, homes }) => {
+const CommunityList: React.FC<MainDisplayProps> = ({ communities, homes, selectedGroup }) => {
   const [processedCommunities, setProcessedCommunities] = useState<Community[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedCommunity, setSelectedCommunity] = useState<Community | null>(null);
   const [filterType, setFilterType] = useState<string>('');
-  const [minPrice, setMinPrice] = useState<string>('');
-  const [maxPrice, setMaxPrice] = useState<string>('');
-  const [minSqft, setMinSqft] = useState<string>('');
-  const [maxSqft, setMaxSqft] = useState<string>('');
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 1000000]);
+  const [sqftRange, setSqftRange] = useState<[number, number]>([0, 5000]);
 
   useEffect(() => {
-    const newCommunities = communities.map(community => {
-      const communityHomes = homes.filter(home => home.communityId === community.id);
-      const avgPrice = communityHomes.length > 0
-        ? '$' + (communityHomes.reduce((acc, home) => acc + home.price, 0) / communityHomes.length).toFixed(2)
-        : 'N/A';
+    const newCommunities = communities
+      .filter(community => selectedGroup === '' || community.group === selectedGroup)
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map(community => {
+        const communityHomes = homes.filter(home => home.communityId === community.id);
+        const avgPrice = communityHomes.length > 0
+          ? '$' + (communityHomes.reduce((acc, home) => acc + home.price, 0) / communityHomes.length).toFixed(2)
+          : 'N/A';
 
-      return { ...community, homes: communityHomes, avgPrice };
-    });
+        return { ...community, homes: communityHomes, avgPrice };
+      });
 
     setProcessedCommunities(newCommunities);
-  }, [communities, homes]);
+  }, [communities, homes, selectedGroup]);
 
   const toggleHomeDetails = (communityId: string) => {
     const community = processedCommunities.find(c => c.id === communityId);
@@ -55,52 +58,66 @@ const CommunityList: React.FC<MainDisplayProps> = ({ communities, homes }) => {
     e.currentTarget.src = 'https://via.placeholder.com/150';
   };
 
+  const handlePriceChange = (event: Event, newValue: number | number[]) => {
+    setPriceRange(newValue as [number, number]);
+  };
+
+  const handleSqftChange = (event: Event, newValue: number | number[]) => {
+    setSqftRange(newValue as [number, number]);
+  };
+
   const filterHomes = (homes: Home[]) => {
     return homes.filter(home => (
       (filterType === '' || home.type === filterType) &&
-      (minPrice === '' || home.price >= parseFloat(minPrice)) &&
-      (maxPrice === '' || home.price <= parseFloat(maxPrice)) &&
-      (minSqft === '' || home.area >= parseFloat(minSqft)) &&
-      (maxSqft === '' || home.area <= parseFloat(maxSqft))
+      home.price >= priceRange[0] && home.price <= priceRange[1] &&
+      home.area >= sqftRange[0] && home.area <= sqftRange[1]
     ));
   };
 
   const HomesModal = () => (
-    
     <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-    <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 800, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
-      <IconButton aria-label="close" onClick={() => setIsModalOpen(false)} sx={{ position: 'absolute', right: 8, top: 8 }}>
-        <CloseIcon />
-      </IconButton>
-      <Grid container spacing={2} alignItems="center" justifyContent="center" sx={{ mb: 2 }}>
-        <Grid item xs={2}>
-          <TextField
-            select
-            size="small"
-            label="Type"
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
-            fullWidth
-          >
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value="House">House</MenuItem>
-            <MenuItem value="Townhome">Townhome</MenuItem>
-            <MenuItem value="Condo">Condo</MenuItem>
-          </TextField>
+      <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 800, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
+        <IconButton aria-label="close" onClick={() => setIsModalOpen(false)} sx={{ position: 'absolute', right: 8, top: 8 }}>
+          <CloseIcon />
+        </IconButton>
+        <Grid container spacing={2} alignItems="center" justifyContent="center" sx={{ mb: 2 }}>
+          <Grid item xs={2}>
+            <TextField
+              select
+              size="small"
+              label="Type"
+              value={filterType}
+              onChange={(e) => setFilterType(e.target.value)}
+              fullWidth
+            >
+              <MenuItem value="">All</MenuItem>
+              <MenuItem value="House">House</MenuItem>
+              <MenuItem value="Townhome">Townhome</MenuItem>
+              <MenuItem value="Condo">Condo</MenuItem>
+              <MenuItem value="Duplex">Duplex</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={4}>
+            <Typography gutterBottom>Price Range</Typography>
+            <Slider
+              value={priceRange}
+              onChange={handlePriceChange}
+              valueLabelDisplay="auto"
+              min={0}
+              max={1000000}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Typography gutterBottom>Sqft Range</Typography>
+            <Slider
+              value={sqftRange}
+              onChange={handleSqftChange}
+              valueLabelDisplay="auto"
+              min={0}
+              max={5000}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={2}>
-          <TextField size="small" label="Min Price" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} fullWidth />
-        </Grid>
-        <Grid item xs={2}>
-          <TextField size="small" label="Max Price" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} fullWidth />
-        </Grid>
-        <Grid item xs={2}>
-          <TextField size="small" label="Min Sqft" value={minSqft} onChange={(e) => setMinSqft(e.target.value)} fullWidth />
-        </Grid>
-        <Grid item xs={2}>
-          <TextField size="small" label="Max Sqft" value={maxSqft} onChange={(e) => setMaxSqft(e.target.value)} fullWidth />
-        </Grid>
-      </Grid>
         {filterHomes(selectedCommunity?.homes || []).map(home => (
           <Card key={home.id} sx={{ mb: 2 }}>
             <CardActionArea onClick={() => {/* handle click action */}}>
@@ -109,7 +126,8 @@ const CommunityList: React.FC<MainDisplayProps> = ({ communities, homes }) => {
                   {home.type}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Area: {home.area} sqft - Price: ${home.price.toLocaleString()}
+                  Area: {home.area} sqft
+                  Price: ${home.price.toLocaleString()}
                 </Typography>
               </CardContent>
             </CardActionArea>

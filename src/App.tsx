@@ -11,26 +11,34 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
-import Slider from '@mui/material/Slider';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://mui.com/">
-        My Linkedin
+        My LinkedIn
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
     </Typography>
   );
 }
+
 const defaultTheme = createTheme();
+
 const App: React.FC = () => {
   const [communities, setCommunities] = useState<Community[]>([]);
   const [homes, setHomes] = useState<Home[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    let isMounted = true; // Flag to track if the component is mounted
+    let isMounted = true;
 
     const fetchCommunities = async () => {
       try {
@@ -54,13 +62,21 @@ const App: React.FC = () => {
     fetchHomes();
 
     return () => {
-      isMounted = false; // Set the flag to false when the component unmounts
+      isMounted = false;
     };
   }, []);
-  
+
   if (error) {
     return <div>Error: {error}</div>;
   }
+
+  // Extract unique groups
+  const groups = Array.from(new Set(communities.map(community => community.group)));
+
+  const handleGroupChange = (event: SelectChangeEvent<string>) => {
+    setSelectedGroup(event.target.value as string);
+  };
+  
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -74,14 +90,32 @@ const App: React.FC = () => {
         </Toolbar>
       </AppBar>
       <main>
-        {/* Community List Component */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 2 }}>
+          <FormControl variant="outlined" sx={{ minWidth: 200 }}>
+            <InputLabel id="group-select-label">Group</InputLabel>
+            <Select
+                labelId="group-select-label"
+                id="group-select"
+                value={selectedGroup}
+                onChange={handleGroupChange}
+                label="Group"
+              >
+                <MenuItem value="">
+                  <em>All</em>
+                </MenuItem>
+                {groups.map(group => (
+                  <MenuItem key={group} value={group}>{group}</MenuItem>
+                ))}
+              </Select>
+
+          </FormControl>
+        </Box>
         {communities.length > 0 && homes.length > 0 ? (
-          <CommunityList communities={communities} homes={homes} />
+          <CommunityList communities={communities} homes={homes} selectedGroup={selectedGroup} />
         ) : (
           <div>Loading...</div>
         )}
       </main>
-      {/* Footer */}
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
           Footer
@@ -96,7 +130,6 @@ const App: React.FC = () => {
         </Typography>
         <Copyright />
       </Box>
-      {/* End footer */}
     </ThemeProvider>
   );
 };
