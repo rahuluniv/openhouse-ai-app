@@ -42,7 +42,7 @@ I have created this project which involves creating a web application using Reac
 - **State Management**: Use Redux or Context API for efficient state management.
 - **Documentation**: Enhance comments and documentation for components and functions.
 
-## Obstacles Faced and I Solved Them 
+## Obstacles Faced and how I Solved Them 
 ## Introduction
 
 This document details the approach and steps taken to resolve the Cross-Origin Resource Sharing (CORS) issue encountered during the development of our React.js and TypeScript application.
