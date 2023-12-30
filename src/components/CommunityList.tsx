@@ -231,12 +231,22 @@ const CommunityList: React.FC<MainDisplayProps> = ({
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button
-                  size="small"
-                  onClick={() => toggleHomeDetails(community.id)}
-                >
-                  Show Homes
-                </Button>
+                {community?.homes?.length && community?.homes?.length > 0 ? (
+                  <Button
+                    size="small"
+                    onClick={() => toggleHomeDetails(community.id)}
+                  >
+                    Show Homes
+                  </Button>
+                ) : (
+                  <Button
+                    size="small"
+                    onClick={() => toggleHomeDetails(community.id)}
+                    disabled
+                  >
+                    No Homes Available at the Moment
+                  </Button>
+                )}
               </CardActions>
             </Card>
           </Grid>
