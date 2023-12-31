@@ -208,7 +208,8 @@ const CommunityList: React.FC<MainDisplayProps> = ({
   return (
     <Container sx={{ py: 8 }} maxWidth="md">
       <Grid container spacing={4}>
-        {processedCommunities.map((community) => (
+      {processedCommunities.length > 0 &&
+        processedCommunities.map((community) => (
           <Grid item key={community.id} xs={12} sm={6} md={4}>
             <Card
               sx={{ height: "100%", display: "flex", flexDirection: "column" }}
