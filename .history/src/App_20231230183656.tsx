@@ -42,7 +42,7 @@ const App: React.FC = () => {
 
     const fetchCommunities = async () => {
       try {
-        const response = await axios.get<Community[]>('https://storage.googleapis.com/openhouse-ai-fe-coding-test/communities.json');
+        const response = await axios.get<Community[]>('https://storage.googleapis.com/api/openhouse-ai-fe-coding-test/communities.json');
         if (isMounted) setCommunities(response.data);
       } catch (error) {
         if (isMounted) setError('Error fetching communities');
@@ -51,7 +51,7 @@ const App: React.FC = () => {
 
     const fetchHomes = async () => {
       try {
-        const response = await axios.get<Home[]>('https://storage.googleapis.com/openhouse-ai-fe-coding-test/homes.json');
+        const response = await axios.get<Home[]>('https://storage.googleapis.com/api/openhouse-ai-fe-coding-test/homes.json');
         if (isMounted) setHomes(response.data);
       } catch (error) {
         if (isMounted) setError('Error fetching homes');
