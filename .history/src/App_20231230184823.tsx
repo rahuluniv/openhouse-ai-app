@@ -70,12 +70,7 @@ const App: React.FC = () => {
     return <div>Error: {error}</div>;
   }
 
-  // Extract unique groups
-  const groups = Array.from(new Set(communities.map(community => community.group)));
-
-  const handleGroupChange = (event: SelectChangeEvent<string>) => {
-    setSelectedGroup(event.target.value as string);
-  };
+  
   
 
   return (
